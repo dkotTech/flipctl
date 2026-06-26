@@ -41,6 +41,7 @@
 Первая попытка — использовать решение, которое уже умеет работать с любым HTML-движком.
 
 <video src="assets/tauri1.webm" controls width="600"></video>
+[tauri1.webm](https://github.com/user-attachments/assets/e3d44db4-2071-4455-946d-1d83ee4b8c1d)
 
 ```bash
 cd screencaster && cargo run
@@ -67,6 +68,7 @@ WPE WebKit — WebKit-движок для embedded-платформ.
 Есть зависимость от биндингов, но он работает в headless-режиме.
 
 <video src="assets/wpe1.webm" controls width="600"></video>
+[wpe1.webm](https://github.com/user-attachments/assets/52e8363c-98cf-4bdb-a72e-07fb451cf92f)
 
 ```bash
 cd wpe-screencaster && cargo run
@@ -79,6 +81,7 @@ Servo поддерживает headless-режим. Это чистый Rust б�
 Выглядит интересно, но, на мой взгляд, он еще долго будет находиться в активной разработке. Тем не менее его можно оставить как экспериментальный вариант под флагом.
 
 <video src="assets/servo1.webm" controls width="600"></video>
+[servo1.webm](https://github.com/user-attachments/assets/1018217b-2610-41d9-8107-4f544389b309)
 
 ```bash
 cd servo-screencaster && cargo run
@@ -93,6 +96,7 @@ cd servo-screencaster && cargo run
 Tauri:
 
 <video src="assets/tauri2.webm" controls width="600"></video>
+[tauri2.webm](https://github.com/user-attachments/assets/3a90d301-d6c3-4f01-b113-22daff08a701)
 
 ```bash
 cd tauri-remote && cargo run
@@ -101,6 +105,7 @@ cd tauri-remote && cargo run
 Servo:
 
 <video src="assets/servo2.webm" controls width="600"></video>
+[servo2.webm](https://github.com/user-attachments/assets/da4ad7f9-2d12-40cd-9539-55cd3bbbb9fb)
 
 ```bash
 cd servo-remote && cargo run
@@ -109,6 +114,7 @@ cd servo-remote && cargo run
 WPE:
 
 <video src="assets/wpe2.webm" controls width="600"></video>
+[wpe2.webm](https://github.com/user-attachments/assets/d5508c84-8c7e-40bf-ba74-9dcf87b1eca6)
 
 ```bash
 cd wpe-remote && cargo run
@@ -151,6 +157,7 @@ Core UI тоже может быть самостоятельным плагин
 Сюда хорошо ложится концепция Tauri с политиками разрешений для UI. Можно не изобретать велосипед и использовать похожий подход.
 
 <video src="assets/fe-plugin.webm" controls width="600"></video>
+[fe-plugin.webm](https://github.com/user-attachments/assets/1f016220-1a8c-4b6a-8816-ced4205461ff)
 
 Собираем frontend и плагин:
 
