@@ -1,5 +1,3 @@
-# Русская версия
-
 Привет. Начну по порядку с того, что удалось протестировать и проверить.
 
 # HTML UI
@@ -41,7 +39,8 @@
 Первая попытка — использовать решение, которое уже умеет работать с любым HTML-движком.
 
 <video src="assets/tauri1.webm" controls width="600"></video>
-[tauri1.webm](https://github.com/user-attachments/assets/e3d44db4-2071-4455-946d-1d83ee4b8c1d)
+https://github.com/user-attachments/assets/e3d44db4-2071-4455-946d-1d83ee4b8c1d
+https://github.com/user-attachments/assets/fa9d217d-940f-4eb7-88b6-30b9eac9a303
 
 ```bash
 cd screencaster && cargo run
