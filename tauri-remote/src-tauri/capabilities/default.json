@@ -1,6 +1,0 @@
-{
-  "identifier":  "default",
-  "description": "",
-  "windows":     ["main"],
-  "permissions": ["core:default"]
-}
