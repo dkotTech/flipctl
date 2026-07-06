@@ -200,12 +200,8 @@ A 256×144 rgb565 frame is 72 KB; at 10 fps that is ~720 KB/s — fits full-spee
 
 # One-command demo
 
-Dependencies (Rust, Node, the servo toolchain) are installed by the OS-specific script:
-
-```bash
-./scripts/setup-linux.sh             # Linux; --webkit adds the WPE libraries
-./scripts/setup-macos.sh             # macOS (servo only — no WPE on mac)
-```
+Dependencies (Rust, Node, the servo toolchain) — step-by-step commands for your OS:
+[INSTALL-linux.md](INSTALL-linux.md) / [INSTALL-macos.md](INSTALL-macos.md).
 
 Then:
 

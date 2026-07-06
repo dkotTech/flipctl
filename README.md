@@ -220,12 +220,8 @@ cargo run -- inspect stream.bin --dump 50:frame.png
 
 # Демо одной командой
 
-Зависимости (Rust, Node, тулчейн servo) ставятся скриптом под свою ОС:
-
-```bash
-./scripts/setup-linux.sh             # Linux; --webkit добавит библиотеки WPE
-./scripts/setup-macos.sh             # macOS (только servo — WPE на маке нет)
-```
+Зависимости (Rust, Node, тулчейн servo) — команды по порядку под свою ОС:
+[INSTALL-linux.md](INSTALL-linux.md) / [INSTALL-macos.md](INSTALL-macos.md).
 
 Дальше:
 
