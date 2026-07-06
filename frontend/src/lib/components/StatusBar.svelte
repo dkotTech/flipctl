@@ -28,7 +28,7 @@
 		<span class="title">{title}</span>
 	</div>
 	<div class="status-right">
-		<PixelIcon name="wifi" size={14} color="#ffffff" />
+		<PixelIcon name="wifi" size={16} color="#ffffff" />
 		<span class="time">{time}</span>
 		<div class="battery" title="{battery}%">
 			<div class="battery-body">
@@ -69,7 +69,7 @@
 	}
 
 	.title {
-		font-size: 7px;
+		font-size: 16px;
 		letter-spacing: 1px;
 		color: #ffffff;
 		text-transform: uppercase;
@@ -82,7 +82,7 @@
 	}
 
 	.time {
-		font-size: 7px;
+		font-size: 16px;
 		color: #ffffff;
 		letter-spacing: 1px;
 		min-width: 28px;
@@ -113,5 +113,45 @@
 		width: 2px;
 		height: 4px;
 		background: #ffffff;
+	}
+
+	/* Compact mode: 256×144 device LCD (html.compact is set from JS) */
+	:global(html.compact) .status-bar {
+		padding: 0 4px;
+	}
+
+	:global(html.compact) .title,
+	:global(html.compact) .time {
+		font-size: 8px;
+		letter-spacing: 0;
+	}
+
+	:global(html.compact) .time {
+		min-width: 0;
+	}
+
+	:global(html.compact) .dot {
+		width: 4px;
+		height: 4px;
+	}
+
+	:global(html.compact) .status-left,
+	:global(html.compact) .status-right {
+		gap: 4px;
+	}
+
+	/* PixelIcon svg: CSS width/height wins over the size attribute */
+	:global(html.compact) .status-right :global(svg) {
+		width: 8px;
+		height: 8px;
+	}
+
+	:global(html.compact) .battery-body {
+		width: 10px;
+		height: 6px;
+	}
+
+	:global(html.compact) .battery-cap {
+		height: 3px;
 	}
 </style>

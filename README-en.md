@@ -139,7 +139,7 @@ cd frontend && npm run pack
 cd ./..
 cd frontend-ifconfig && npm run pack
 cd ./..
-cd go-server && go run .
+cd backend && cargo run
 ```
 
 Run the UI:
@@ -147,6 +147,65 @@ Run the UI:
 ```bash
 cd tauri-app && cargo tauri dev
 ```
+
+# Renderer: render-rs
+
+The outcome of the render experiments lives in `render-rs` — a headless renderer with the engine selected at build time:
+
+```bash
+cd render-rs
+
+# WPE WebKit (default, C bindings, ~5 MB binary)
+cargo run -- --url http://localhost:5173/
+
+# Servo (pure Rust, no system dependencies)
+cargo build --release --no-default-features --features servo
+```
+
+Features:
+
+- multiple renders side by side — each one loads its HTML from a given endpoint (`--url` or `POST /api/renders`);
+- render video over WebSocket (PNG frames) plus a multipart-stream fallback; the stream keeps a constant fps even when the page is static;
+- raw subscription for displays: the same WebSocket with `?format=rgb565&w=256&h=144&fps=10` — the server converts pixels for the panel, and every subscriber gets its own pace;
+- remote control via API: mouse, keyboard, wheel (`POST /api/renders/{id}/input`, or the same events as text messages over the WebSocket);
+- last-frame screenshot: `GET /api/renders/{id}/frame`;
+- built-in viewer (`/view/{id}`) forwarding mouse/keyboard, and a render manager (`/`).
+
+See [render-rs/README.md](render-rs/README.md) for details.
+
+## Pixel fonts and engines
+
+Lessons learned to keep the UI pixel-perfect:
+
+- Servo blurs small vector fonts — fixed by disabling text antialiasing at the engine level (`gfx_text_antialiasing_enabled = false`, already set in render-rs);
+- font and icon sizes must be multiples of the pixel grid (Press Start 2P is an 8×8 grid → 8/16px; 8×8 icons → 16/24px), otherwise glyphs get clipped and smeared;
+- the viewer scales the canvas only by integer factors (devicePixelRatio-aware) — fractional scaling drops pixel rows;
+- for small panels, create the render at the native resolution (`width:256, height:144`) instead of downscaling — otherwise text degrades into dots.
+
+# USB display: display-agent
+
+A bridge between the renderer and an external display (MCU): it subscribes to the raw render stream and writes frames into a sink using a framed binary protocol (`0xA5 | type | len | ts | body`). The device stays dumb — it draws frames and sends button codes back.
+
+```bash
+# stream into a file — validation without hardware
+cd display-agent
+cargo run -- stream --url ws://localhost:8090/api/renders/1/ws \
+  --format rgb565 --width 256 --height 144 --fps 10 --out file:stream.bin
+
+# stream check: pacing, integrity, frame gaps; dump frame N as PNG
+cargo run -- inspect stream.bin --dump 50:frame.png
+```
+
+A 256×144 rgb565 frame is 72 KB; at 10 fps that is ~720 KB/s — fits full-speed USB CDC. The `serial:/dev/ttyACM0` sink is the next step; the protocol is ready for it (including button packets in the opposite direction). See [display-agent/README.md](display-agent/README.md) for details.
+
+# One-command demo
+
+```bash
+./scripts/demo.sh              # debug build
+./scripts/demo.sh --release    # release build
+```
+
+The script builds the frontends into `apps/*.zip`, the backend, and render-rs (servo); starts the backend, discovers all apps via `/api/apps`, spawns a render for each one, and prints viewer links. Ctrl+C stops the whole stack.
 
 # Conclusions
 

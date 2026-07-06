@@ -1,0 +1,7 @@
+{
+  "id": "ping",
+  "name": "ping",
+  "icon": "wifi",
+  "version": "0.1.0",
+  "description": "ICMP ping tool"
+}

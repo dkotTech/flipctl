@@ -49,6 +49,10 @@ struct Args {
 
 fn resolve_url(args: &Args) -> Url {
     match &args.html {
+        // Accept an http(s) URL directly, otherwise treat the arg as a file path.
+        Some(path) if path.starts_with("http://") || path.starts_with("https://") => {
+            Url::parse(path).expect("invalid url")
+        }
         Some(path) => {
             let abs = Path::new(path)
                 .canonicalize()

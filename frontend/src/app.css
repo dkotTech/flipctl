@@ -33,6 +33,15 @@
 	--action-h: 38px;
 }
 
+/* Compact mode: small panels like the 256×144 device LCD.
+   The `compact` class is set from JS by viewport size (see +layout.svelte) —
+   servo does not re-evaluate CSS media queries against the real webview size,
+   so @media (max-height) never matches there. */
+html.compact {
+	--status-h: 16px;
+	--action-h: 16px;
+}
+
 html,
 body {
 	width: 100%;

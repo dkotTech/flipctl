@@ -15,7 +15,9 @@
 
 	const dispatch = createEventDispatcher<{ select: MenuItem; change: number }>();
 
-	const VISIBLE = 8;
+	// Compact screens (256×144 LCD) fit fewer 16px rows than the desktop 40px ones.
+	const VISIBLE =
+		typeof window !== 'undefined' && window.innerHeight <= 240 ? 6 : 8;
 	let scrollOffset = 0;
 
 	$: {
@@ -77,7 +79,7 @@
 				<div class="item-icon">
 					<PixelIcon
 						name={item.icon}
-						size={14}
+						size={24}
 						color={selected ? 'var(--selected-fg)' : 'var(--pixel)'}
 					/>
 				</div>
@@ -115,7 +117,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 6px 0 4px;
-		height: 34px;
+		height: 40px;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 		cursor: pointer;
 		transition: none;
@@ -135,14 +137,14 @@
 	}
 
 	.cursor {
-		font-size: 9px;
-		width: 10px;
+		font-size: 13px;
+		width: 14px;
 		flex-shrink: 0;
 		color: inherit;
 	}
 
 	.item-label {
-		font-size: 8px;
+		font-size: 12px;
 		text-transform: uppercase;
 		letter-spacing: 0.5px;
 		white-space: nowrap;
@@ -152,7 +154,7 @@
 	}
 
 	.item-sub {
-		font-size: 6px;
+		font-size: 9px;
 		opacity: 0.6;
 		color: inherit;
 		margin-left: 4px;
@@ -178,5 +180,34 @@
 		right: 0;
 		width: 3px;
 		background: var(--pixel);
+	}
+
+	/* Compact mode: 256×144 device LCD (html.compact is set from JS) */
+	:global(html.compact) .menu-item {
+		height: 16px;
+		padding: 0 4px 0 2px;
+	}
+
+	:global(html.compact) .cursor {
+		font-size: 8px;
+		width: 8px;
+	}
+
+	:global(html.compact) .item-label {
+		font-size: 8px;
+		letter-spacing: 0;
+	}
+
+	:global(html.compact) .item-sub {
+		display: none;
+	}
+
+	:global(html.compact) .item-left {
+		gap: 4px;
+	}
+
+	:global(html.compact) .item-icon :global(svg) {
+		width: 8px;
+		height: 8px;
 	}
 </style>

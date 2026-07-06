@@ -40,8 +40,22 @@
 		}
 	}
 
-	onMount(() => window.addEventListener('keydown', handleKeydown));
-	onDestroy(() => window.removeEventListener('keydown', handleKeydown));
+	// Compact mode for small screens (256×144 device LCD). Driven from JS
+	// because servo doesn't match @media (max-height) against the real
+	// webview size, while window.innerHeight is correct in both engines.
+	function setCompact() {
+		document.documentElement.classList.toggle('compact', window.innerHeight <= 240);
+	}
+
+	onMount(() => {
+		setCompact();
+		window.addEventListener('resize', setCompact);
+		window.addEventListener('keydown', handleKeydown);
+	});
+	onDestroy(() => {
+		window.removeEventListener('resize', setCompact);
+		window.removeEventListener('keydown', handleKeydown);
+	});
 </script>
 
 <div class="shell">

@@ -159,7 +159,7 @@ cd frontend && npm run pack
 cd ./..
 cd frontend-ifconfig && npm run pack
 cd ./..
-cd go-server && go run .
+cd backend && cargo run
 ```
 
 Запускаем UI:
@@ -167,6 +167,65 @@ cd go-server && go run .
 ```bash
 cd tauri-app && cargo tauri dev
 ```
+
+# Рендер: render-rs
+
+Итог экспериментов с рендером собран в `render-rs` — headless-рендер с движком, выбираемым на этапе сборки:
+
+```bash
+cd render-rs
+
+# WPE WebKit (по умолчанию, C-биндинги, бинарь ~5 MB)
+cargo run -- --url http://localhost:5173/
+
+# Servo (чистый Rust, без системных зависимостей)
+cargo build --release --no-default-features --features servo
+```
+
+Возможности:
+
+- несколько рендеров одновременно — каждый забирает HTML с указанного endpoint (`--url` или `POST /api/renders`);
+- видео рендера по WebSocket (PNG-кадры) + фоллбек multipart-стримом; поток идет с постоянным fps, даже если страница статична;
+- raw-подписка для дисплеев: тот же WebSocket с `?format=rgb565&w=256&h=144&fps=10` — сервер сам конвертирует пиксели под матрицу, у каждого подписчика свой темп;
+- удаленное управление по API: мышь, клавиатура, колесо (`POST /api/renders/{id}/input` или те же события текстом в WebSocket);
+- скриншот последнего кадра: `GET /api/renders/{id}/frame`;
+- встроенный viewer (`/view/{id}`) с пробросом мыши и клавиатуры и менеджер рендеров (`/`).
+
+Подробности в [render-rs/README.md](render-rs/README.md).
+
+## Пиксельные шрифты и движки
+
+Набитые шишки, чтобы UI оставался пиксель-в-пиксель:
+
+- Servo мылит мелкие векторные шрифты — лечится отключением антиалиасинга текста на уровне движка (`gfx_text_antialiasing_enabled = false`, уже включено в render-rs);
+- размеры шрифта и иконок должны быть кратны пиксельной сетке (Press Start 2P — сетка 8×8 → размеры 8/16px; иконки 8×8 → 16/24px), иначе глифы режутся и плывут;
+- viewer масштабирует canvas только целым коэффициентом с учетом devicePixelRatio — дробный масштаб выбрасывает ряды пикселей;
+- для маленьких матриц рендер создается сразу в родном разрешении (`width:256, height:144`), а не даунскейлится — иначе от текста остаются точки.
+
+# USB-дисплей: display-agent
+
+Мост между рендером и внешним дисплеем (MCU): подписывается на raw-поток рендера и пишет кадры в sink фреймированным бинарным протоколом (`0xA5 | type | len | ts | body`). Устройство остается тупым — рисует кадры и шлет коды кнопок обратно.
+
+```bash
+# стрим в файл — валидация без железа
+cd display-agent
+cargo run -- stream --url ws://localhost:8090/api/renders/1/ws \
+  --format rgb565 --width 256 --height 144 --fps 10 --out file:stream.bin
+
+# проверка потока: пейсинг, целостность, пропуски кадров; кадр N — в PNG
+cargo run -- inspect stream.bin --dump 50:frame.png
+```
+
+Кадр 256×144 rgb565 = 72 KB, при 10 fps ~720 KB/s — влезает в full-speed USB CDC. Sink `serial:/dev/ttyACM0` — следующий шаг, протокол под него готов (включая обратные пакеты кнопок). Подробности в [display-agent/README.md](display-agent/README.md).
+
+# Демо одной командой
+
+```bash
+./scripts/demo.sh              # debug-сборка
+./scripts/demo.sh --release    # release-сборка
+```
+
+Скрипт собирает фронтенды в `apps/*.zip`, бекенд и render-rs (servo), поднимает бекенд, находит все приложения через `/api/apps`, запускает рендер на каждое и печатает ссылки на viewer'ы. Ctrl+C гасит весь стек.
 
 # Выводы
 

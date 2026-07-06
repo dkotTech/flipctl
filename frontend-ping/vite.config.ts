@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
-		port: 5274,
+		port: 5275,
 		strictPort: true,
 		host: '0.0.0.0',
 		// dev mode talks to the running backend for real data
@@ -13,7 +13,7 @@ export default defineConfig({
 		}
 	},
 	preview: {
-		port: 5174,
+		port: 5275,
 		strictPort: true
 	}
 });

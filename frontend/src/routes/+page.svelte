@@ -75,7 +75,7 @@
 	}
 
 	.panel-header {
-		font-size: 6px;
+		font-size: 9px;
 		text-transform: uppercase;
 		letter-spacing: 1px;
 		color: rgba(0, 0, 0, 0.45);
@@ -108,12 +108,12 @@
 	}
 
 	.preview-label {
-		font-size: 6px;
+		font-size: 9px;
 		text-transform: uppercase;
 		color: var(--pixel);
 		letter-spacing: 0.5px;
 		text-align: center;
-		max-width: 80px;
+		max-width: 100px;
 		line-height: 1.6;
 	}
 
@@ -126,5 +126,17 @@
 			opacity: 1;
 			transform: scale(1);
 		}
+	}
+
+	/* Compact mode: 256×144 device LCD — menu only, no preview panel */
+	:global(html.compact) .panel-preview,
+	:global(html.compact) .divider {
+		display: none;
+	}
+
+	:global(html.compact) .panel-header {
+		font-size: 8px;
+		letter-spacing: 0;
+		padding: 3px 4px 2px 6px;
 	}
 </style>

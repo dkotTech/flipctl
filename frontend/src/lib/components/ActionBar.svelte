@@ -51,13 +51,13 @@
 	}
 
 	.action-key {
-		font-size: 9px;
+		font-size: 13px;
 		color: var(--accent);
 		display: block;
 	}
 
 	.action-label {
-		font-size: 6px;
+		font-size: 9px;
 		color: var(--action-fg);
 		display: block;
 		text-transform: uppercase;
@@ -66,5 +66,24 @@
 
 	.action-btn.accent .action-key {
 		color: var(--accent);
+	}
+
+	/* Compact mode: 256×144 device LCD (html.compact is set from JS) */
+	:global(html.compact) .action-bar {
+		padding: 0 4px;
+	}
+
+	:global(html.compact) .action-btn {
+		gap: 3px;
+		padding: 0 2px;
+	}
+
+	:global(html.compact) .action-key {
+		font-size: 8px;
+	}
+
+	:global(html.compact) .action-label {
+		font-size: 8px;
+		letter-spacing: 0;
 	}
 </style>
