@@ -12,10 +12,11 @@ cd "$(dirname "$0")/.."
 
 RENDER_PORT="${RENDER_PORT:-8090}"
 PROFILE=debug
-CARGO_FLAGS=()
+# строка, не массив: на macOS bash 3.2 пустой массив + set -u падает
+CARGO_FLAGS=""
 if [[ "${1:-}" == "--release" ]]; then
   PROFILE=release
-  CARGO_FLAGS+=(--release)
+  CARGO_FLAGS="--release"
 fi
 
 echo "==> frontend'ы → apps/*.zip"
@@ -32,10 +33,12 @@ for dir in frontend frontend-ifconfig frontend-ping; do
 done
 
 echo "==> backend (cargo $PROFILE)"
-(cd backend && cargo build --quiet "${CARGO_FLAGS[@]}")
+# shellcheck disable=SC2086
+(cd backend && cargo build --quiet $CARGO_FLAGS)
 
 echo "==> render-rs, движок servo (cargo $PROFILE)"
-(cd render-rs && cargo build --quiet --no-default-features --features servo "${CARGO_FLAGS[@]}")
+# shellcheck disable=SC2086
+(cd render-rs && cargo build --quiet --no-default-features --features servo $CARGO_FLAGS)
 
 cleanup() {
   echo
@@ -58,13 +61,14 @@ done
 # Рендер на каждое приложение из бекенда (url'ы из /api/apps)
 APP_URLS=$(curl -s http://localhost:5173/api/apps | grep -o '"url":"[^"]*"' | cut -d'"' -f4)
 
-RENDER_ARGS=()
+RENDER_ARGS=""
 for u in $APP_URLS; do
-  RENDER_ARGS+=(--url "$u")
+  RENDER_ARGS="$RENDER_ARGS --url $u"
 done
 
 echo "==> запуск render-rs (servo) на: $APP_URLS"
-"render-rs/target/$PROFILE/render-rs" --port "$RENDER_PORT" "${RENDER_ARGS[@]}" &
+# shellcheck disable=SC2086
+"render-rs/target/$PROFILE/render-rs" --port "$RENDER_PORT" $RENDER_ARGS &
 
 sleep 2
 echo
