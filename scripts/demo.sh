@@ -21,7 +21,14 @@ fi
 echo "==> frontend'ы → apps/*.zip"
 for dir in frontend frontend-ifconfig frontend-ping; do
   echo "    $dir"
-  (cd "$dir" && npm run --silent pack >/dev/null)
+  (
+    cd "$dir"
+    if [[ ! -d node_modules ]]; then
+      echo "    ($dir: node_modules нет — npm install)"
+      npm install --silent
+    fi
+    npm run --silent pack >/dev/null
+  )
 done
 
 echo "==> backend (cargo $PROFILE)"
